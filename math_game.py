@@ -7,8 +7,8 @@ import os
 
 SPRITE_SCALING = 0.5
 
-SCREEN_WIDTH = 1000
-SCREEN_HEIGHT = 750
+SCREEN_WIDTH = 1920
+SCREEN_HEIGHT = 1080
 SCREEN_TITLE = "Math Game"
 SPRITE_PIXEL_SIZE = 128
 GRID_PIXEL_SIZE = (SPRITE_PIXEL_SIZE * SPRITE_SCALING)
@@ -20,6 +20,19 @@ MOVEMENT_SPEED = 10 * SPRITE_SCALING
 JUMP_SPEED = 20 * SPRITE_SCALING
 GRAVITY = .75 * SPRITE_SCALING
 FRICTION = 1.1
+
+class GameView(arcade.View):
+    """ Main game """
+
+    def __init__(self):
+        super().__init__()
+        
+        arcade.set_background_color(arcade.color.AMAZON)
+        self.wall_list = arcade.SpriteList()
+
+    def setup(self):
+        pass
+        #Create Border
 
 class InstructionView(arcade.View):
     """ View to show instructions """
@@ -41,11 +54,9 @@ class InstructionView(arcade.View):
                          arcade.color.WHITE, font_size=20, anchor_x="center")
         arcade.draw_text("WASD / Spacebar - Move / Jump", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2-100,
                          arcade.color.WHITE, font_size=20, anchor_x="center")                 
-        arcade.draw_text("Left Mouse - Spear", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2-125,
+        arcade.draw_text("Left Mouse - Interact", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2-125,
                          arcade.color.WHITE, font_size=20, anchor_x="center")
-        arcade.draw_text("Right Mouse - Blaster", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2-150,
-                         arcade.color.WHITE, font_size=20, anchor_x="center")
-        arcade.draw_text("ESC - Upgrade Menu / Pause ", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2-175,
+        arcade.draw_text("Pause ", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2-150,
                          arcade.color.WHITE, font_size=20, anchor_x="center")
 
     def on_mouse_press(self, _x, _y, _button, _modifiers):
