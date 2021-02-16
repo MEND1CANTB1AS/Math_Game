@@ -22,5 +22,5 @@ class timer:
                 seconds = 0
             if seconds % 10 == 0:
                 lava_level += 1
-          #  print(lava_level)
+            print(lava_level)
 
