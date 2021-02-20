@@ -15,7 +15,7 @@ SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 SCREEN_TITLE = "Sprite No numbers on Walls Example"
 
-NUMBER_OF_numberS = 7
+NUMBER_OF_NUMBERS = 7
 
 MOVEMENT_SPEED = 5
 
@@ -72,23 +72,49 @@ class MyGame(arcade.Window):
         images_list = [r"0.png",r"1.png",r"2.png",r"3.png",r"4.png",r"5.png",r"6.png",r"7.png",r"8.png",r"9.png"]
         
         answer = "12"
-
-        # Generates answer image.
-        if len(str(answer)) == 2 and (f"{answer}.png" not in images_list):
-            images = [Image.open(x) for x in [f"{answer[0]}.png", f"{answer[1]}.png"]]
-            total_width = 0
-            max_height = 0
-            for image in images:
-                total_width += image.size[0]
-                max_height = max(max_height, image.size[1])
-            new_image = Image.new('RGB', (total_width, max_height))
-            current_width = 0
-            for image in images:
-                new_image.paste(image, (current_width,0))
-                current_width += image.size[0]
-            new_image.save(f"{answer}.png")
         
-        answer_image = (f"{answer}.png")
+        def generate_double_image(number, images_list):
+            # Generates answer image.
+            if len(str(number)) == 2 and (f"{number}.png" not in images_list):
+                images = [Image.open(x) for x in [f"{number[0]}.png", f"{number[1]}.png"]]
+                total_width = 0
+                max_height = 0
+                for image in images:
+                    total_width += image.size[0]
+                    max_height = max(max_height, image.size[1])
+                new_image = Image.new('RGB', (total_width, max_height))
+                current_width = 0
+                for image in images:
+                    new_image.paste(image, (current_width,0))
+                    current_width += image.size[0]
+                new_image.save(f"{number}.png")
+            new_image = (f"{number}.png")
+            return new_image
+
+        def create_double_number():
+            first_number = random.randint(1,9)
+            second_number = random.randint(0,9)
+            number = int(f"{first_number}" + f"{second_number}")
+            return number
+
+        def create_double_digit_images_list(images_list):
+            double_number_list = []
+            for _ in range(1, NUMBER_OF_NUMBERS-1):
+                double_number_list.append(create_double_number())
+            double_digit_images_list = []
+            for number in double_number_list:
+                double_digit_images_list.append(generate_double_image(number, images_list))
+            return double_digit_images_list
+
+        if len(answer) == 2:
+            answer_image = generate_double_image(answer, images_list)
+            double_digit_images_list = create_double_digit_images_list(images_list)
+            for image in double_digit_images_list:
+                number = arcade.Sprite(image, SPRITE_SCALING_NUMBER)
+                self.number_list.append(number)
+
+        if len(answer) == 1:
+            answer_image = f"{answer}.png"
 
         # -- Randomly place numbers where there are no walls
         # Create the numbers
@@ -96,7 +122,7 @@ class MyGame(arcade.Window):
         self.number_list.append(answer_number)
 
         # Selects a random image from the images.
-        for i in range(NUMBER_OF_numberS-1):
+        for i in range(NUMBER_OF_NUMBERS-1):
             image = random.choice(images_list)
             number = arcade.Sprite(image, SPRITE_SCALING_NUMBER)
 
