@@ -2,6 +2,7 @@
 Platformer Game
 """
 import arcade
+import random
 
 # Constants
 SCREEN_WIDTH = 1000
@@ -186,6 +187,10 @@ class MyGame(arcade.Window):
             self.player_sprite.change_x = 0
         elif key == arcade.key.RIGHT or key == arcade.key.D:
             self.player_sprite.change_x = 0
+
+    def on_mouse_press(self, _x, _y, _button, _modifiers):
+        coor = arcade.Window.get_location(self)
+        print(coor)
 
     def on_update(self, delta_time):
         """ Movement and game logic """
