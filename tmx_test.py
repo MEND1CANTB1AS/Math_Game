@@ -14,10 +14,11 @@ TILE_SCALING = 0.5
 COIN_SCALING = 0.5
 SPRITE_PIXEL_SIZE = 128
 GRID_PIXEL_SIZE = (SPRITE_PIXEL_SIZE * TILE_SCALING)
+SPRITE_SCALING = 0.4
 
 # Movement speed of player, in pixels per frame
 PLAYER_MOVEMENT_SPEED = 5
-GRAVITY = .5
+GRAVITY = .6
 PLAYER_JUMP_SPEED = 10
 
 # How many pixels to keep as a minimum margin between the character
@@ -27,6 +28,45 @@ RIGHT_VIEWPORT_MARGIN = 250
 BOTTOM_VIEWPORT_MARGIN = 100
 TOP_VIEWPORT_MARGIN = 100
 
+
+class Player(arcade.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.scale = SPRITE_SCALING
+        self.textures = []
+
+        # Load a left facing texture and a right facing texture.
+        # flipped_horizontally=True will mirror the image we load.
+        texture = arcade.load_texture(":resources:images/animated_characters/female_adventurer/femaleAdventurer_idle.png")
+        self.textures.append(texture)
+        texture = arcade.load_texture(":resources:images/animated_characters/female_adventurer/femaleAdventurer_idle.png",
+                                      flipped_horizontally=True)
+        self.textures.append(texture)
+
+        # By default, face right.
+        self.texture = texture
+
+
+    def update(self):
+        self.center_x += self.change_x
+        self.center_y += self.change_y
+
+        # Figure out if we should face left or right
+        if self.change_x < 0:
+            self.texture = self.textures[1]
+        elif self.change_x > 0:
+            self.texture = self.textures[0]
+
+        # Makes sure the sprite doesn't go off the screen
+        if self.left < 0:
+            self.left = 0
+        elif self.right > SCREEN_WIDTH - 1:
+            self.right = SCREEN_WIDTH - 1
+
+        if self.bottom < 0:
+            self.bottom = 0
+        elif self.top > SCREEN_HEIGHT - 1:
+            self.top = SCREEN_HEIGHT - 1
 
 class MyGame(arcade.Window):
     """
@@ -40,7 +80,6 @@ class MyGame(arcade.Window):
 
         # These are 'lists' that keep track of our sprites. Each sprite should
         # go into a list.
-        # self.coin_list = None
         self.wall_list = None
         self.player_list = None
 
@@ -58,7 +97,7 @@ class MyGame(arcade.Window):
         self.score = 0
 
         # Load sounds
-        self.collect_coin_sound = arcade.load_sound(":resources:sounds/coin1.wav")
+        # self.collect_coin_sound = arcade.load_sound(":resources:sounds/coin1.wav")
         self.jump_sound = arcade.load_sound(":resources:sounds/jump1.wav")
 
         # arcade.set_background_color(arcade.csscolor.CORNFLOWER_BLUE)
@@ -79,8 +118,9 @@ class MyGame(arcade.Window):
         self.coin_list = arcade.SpriteList()
 
         # Set up the player, specifically placing it at these coordinates.
-        image_source = ":resources:images/animated_characters/female_adventurer/femaleAdventurer_idle.png"
-        self.player_sprite = arcade.Sprite(image_source, CHARACTER_SCALING)
+        # image_source = ":resources:images/animated_characters/female_adventurer/femaleAdventurer_idle.png"
+        self.player_list = arcade.SpriteList()
+        self.player_sprite = Player()
         self.player_sprite.center_x = 256
         self.player_sprite.center_y = 256
         self.player_list.append(self.player_sprite)
@@ -91,8 +131,6 @@ class MyGame(arcade.Window):
         map_name = "floor_is_lava.tmx"
         # Name of the layer in the file that has our platforms/walls
         platforms_layer_name = 'Platforms'
-        # Name of the layer that has items for pick-up
-        # coins_layer_name = 'Coins'
 
         # Read in the tiled map
         my_map = arcade.tilemap.read_tmx(map_name)
@@ -102,9 +140,6 @@ class MyGame(arcade.Window):
                                                       layer_name=platforms_layer_name,
                                                       scaling=TILE_SCALING,
                                                       use_spatial_hash=True)
-
-        # -- Coins
-        # self.coin_list = arcade.tilemap.process_layer(my_map, coins_layer_name, TILE_SCALING)
 
         # --- Other stuff
         # Set the background color
@@ -124,7 +159,7 @@ class MyGame(arcade.Window):
 
         # Draw our sprites
         self.wall_list.draw()
-        self.coin_list.draw()
+        
         self.player_list.draw()
 
         # Draw our score on the screen, scrolling it with the viewport
@@ -157,19 +192,6 @@ class MyGame(arcade.Window):
 
         # Move the player with the physics engine
         self.physics_engine.update()
-
-        # See if we hit any coins
-        coin_hit_list = arcade.check_for_collision_with_list(self.player_sprite,
-                                                             self.coin_list)
-
-        # Loop through each coin we hit (if any) and remove it
-        for coin in coin_hit_list:
-            # Remove the coin
-            coin.remove_from_sprite_lists()
-            # Play a sound
-            arcade.play_sound(self.collect_coin_sound)
-            # Add one to the score
-            self.score += 1
 
         # --- Manage Scrolling ---
 

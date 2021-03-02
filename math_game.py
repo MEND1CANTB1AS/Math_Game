@@ -27,6 +27,45 @@ JUMP_SPEED = 20 * SPRITE_SCALING
 GRAVITY = .75 * SPRITE_SCALING
 FRICTION = 1.1
 
+class Player(arcade.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.scale = SPRITE_SCALING
+        self.textures = []
+
+        # Load a left facing texture and a right facing texture.
+        # flipped_horizontally=True will mirror the image we load.
+        texture = arcade.load_texture("sprite.jpg")
+        self.textures.append(texture)
+        texture = arcade.load_texture("sprite.jpg",
+                                      flipped_horizontally=True)
+        self.textures.append(texture)
+
+        # By default, face right.
+        self.texture = texture
+
+
+    def update(self):
+        self.center_x += self.change_x
+        self.center_y += self.change_y
+
+        # Figure out if we should face left or right
+        if self.change_x < 0:
+            self.texture = self.textures[1]
+        elif self.change_x > 0:
+            self.texture = self.textures[0]
+
+        # Makes sure the sprite doesn't go off the screen
+        if self.left < 0:
+            self.left = 0
+        elif self.right > SCREEN_WIDTH - 1:
+            self.right = SCREEN_WIDTH - 1
+
+        if self.bottom < 0:
+            self.bottom = 0
+        elif self.top > SCREEN_HEIGHT - 1:
+            self.top = SCREEN_HEIGHT - 1
+
 class GameView(arcade.View):
     """ Main game """
 
