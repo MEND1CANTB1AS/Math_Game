@@ -33,11 +33,11 @@ class GameView(arcade.View):
     def __init__(self):
 
         # Call the parent class and set up the window
-        
+        super().__init__()
 
         # These are 'lists' that keep track of our sprites. Each sprite should
         # go into a list.
-        self.coin_list = None
+        # self.coin_list = None
         self.wall_list = None
         self.player_list = None
 
@@ -58,9 +58,9 @@ class GameView(arcade.View):
         self.collect_coin_sound = arcade.load_sound(":resources:sounds/coin1.wav")
         self.jump_sound = arcade.load_sound(":resources:sounds/jump1.wav")
 
-        arcade.set_background_color(arcade.csscolor.CORNFLOWER_BLUE)
+        # arcade.set_background_color(arcade.csscolor.CORNFLOWER_BLUE)
     def on_show(self):
-        arcade.set_background_color(arcade.color.AMAZON)
+        arcade.set_background_color(arcade.color.BLACK)
 
 
     def setup(self):
@@ -88,11 +88,11 @@ class GameView(arcade.View):
         # --- Load in a map from the tiled editor ---
 
         # Name of map file to load
-        map_name = ":resources:tmx_maps/map.tmx"
+        map_name = "floor_is_lava.tmx"
         # Name of the layer in the file that has our platforms/walls
         platforms_layer_name = 'Platforms'
         # Name of the layer that has items for pick-up
-        coins_layer_name = 'Coins'
+        # coins_layer_name = 'Coins'
 
         # Read in the tiled map
         my_map = arcade.tilemap.read_tmx(map_name)
@@ -110,9 +110,9 @@ class GameView(arcade.View):
         arcade.start_render()
 
         # Draw our sprites
-        self.wall_list.draw()
-        self.coin_list.draw()
-        self.player_list.draw()
+        # self.wall_list.draw()
+        # self.coin_list.draw()
+        # self.player_list.draw()
 
         # Draw our score on the screen, scrolling it with the viewport
         score_text = f"Score: {self.score}"
@@ -151,7 +151,7 @@ class InstructionView(arcade.View):
 def main():
     """ Main method """
     window = arcade.Window(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE, fullscreen=False)
-    start_view = GameView()
+    start_view = InstructionView()
     window.show_view(start_view)
     arcade.run()
 

@@ -9,16 +9,16 @@ SCREEN_HEIGHT = 650
 SCREEN_TITLE = "Platformer"
 
 # Constants used to scale our sprites from their original size
-CHARACTER_SCALING = 1
+CHARACTER_SCALING = .4
 TILE_SCALING = 0.5
 COIN_SCALING = 0.5
 SPRITE_PIXEL_SIZE = 128
 GRID_PIXEL_SIZE = (SPRITE_PIXEL_SIZE * TILE_SCALING)
 
 # Movement speed of player, in pixels per frame
-PLAYER_MOVEMENT_SPEED = 10
-GRAVITY = 1
-PLAYER_JUMP_SPEED = 20
+PLAYER_MOVEMENT_SPEED = 5
+GRAVITY = .5
+PLAYER_JUMP_SPEED = 10
 
 # How many pixels to keep as a minimum margin between the character
 # and the edge of the screen.
@@ -81,8 +81,8 @@ class MyGame(arcade.Window):
         # Set up the player, specifically placing it at these coordinates.
         image_source = ":resources:images/animated_characters/female_adventurer/femaleAdventurer_idle.png"
         self.player_sprite = arcade.Sprite(image_source, CHARACTER_SCALING)
-        self.player_sprite.center_x = 128
-        self.player_sprite.center_y = 128
+        self.player_sprite.center_x = 256
+        self.player_sprite.center_y = 256
         self.player_list.append(self.player_sprite)
 
         # --- Load in a map from the tiled editor ---
@@ -90,7 +90,7 @@ class MyGame(arcade.Window):
         # Name of map file to load
         map_name = "floor_is_lava.tmx"
         # Name of the layer in the file that has our platforms/walls
-        platforms_layer_name = 'Tile Layer 1'
+        platforms_layer_name = 'Platforms'
         # Name of the layer that has items for pick-up
         # coins_layer_name = 'Coins'
 
