@@ -59,6 +59,9 @@ class GameView(arcade.View):
         self.jump_sound = arcade.load_sound(":resources:sounds/jump1.wav")
 
         arcade.set_background_color(arcade.csscolor.CORNFLOWER_BLUE)
+    def on_show(self):
+        arcade.set_background_color(arcade.color.AMAZON)
+
 
     def setup(self):
         """ Set up the game here. Call this function to restart the game. """
@@ -107,9 +110,9 @@ class GameView(arcade.View):
         arcade.start_render()
 
         # Draw our sprites
-        # self.wall_list.draw()
-        # self.coin_list.draw()
-        # self.player_list.draw()
+        self.wall_list.draw()
+        self.coin_list.draw()
+        self.player_list.draw()
 
         # Draw our score on the screen, scrolling it with the viewport
         score_text = f"Score: {self.score}"
@@ -148,7 +151,7 @@ class InstructionView(arcade.View):
 def main():
     """ Main method """
     window = arcade.Window(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE, fullscreen=False)
-    start_view = InstructionView()
+    start_view = GameView()
     window.show_view(start_view)
     arcade.run()
 
