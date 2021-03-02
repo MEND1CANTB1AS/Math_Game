@@ -1,6 +1,7 @@
 import arcade
 import random
-
+class Problem():
+    
     def equation(self):
         # the operator (+, -, *, /) will be randomly assigned
         operator = random.randint(1, 4)
