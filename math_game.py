@@ -27,17 +27,56 @@ JUMP_SPEED = 20 * SPRITE_SCALING
 GRAVITY = .75 * SPRITE_SCALING
 FRICTION = 1.1
 
+class Player(arcade.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.scale = SPRITE_SCALING
+        self.textures = []
+
+        # Load a left facing texture and a right facing texture.
+        # flipped_horizontally=True will mirror the image we load.
+        texture = arcade.load_texture("sprite.jpg")
+        self.textures.append(texture)
+        texture = arcade.load_texture("sprite.jpg",
+                                      flipped_horizontally=True)
+        self.textures.append(texture)
+
+        # By default, face right.
+        self.texture = texture
+
+
+    def update(self):
+        self.center_x += self.change_x
+        self.center_y += self.change_y
+
+        # Figure out if we should face left or right
+        if self.change_x < 0:
+            self.texture = self.textures[1]
+        elif self.change_x > 0:
+            self.texture = self.textures[0]
+
+        # Makes sure the sprite doesn't go off the screen
+        if self.left < 0:
+            self.left = 0
+        elif self.right > SCREEN_WIDTH - 1:
+            self.right = SCREEN_WIDTH - 1
+
+        if self.bottom < 0:
+            self.bottom = 0
+        elif self.top > SCREEN_HEIGHT - 1:
+            self.top = SCREEN_HEIGHT - 1
+
 class GameView(arcade.View):
     """ Main game """
 
     def __init__(self):
 
         # Call the parent class and set up the window
-        
+        super().__init__()
 
         # These are 'lists' that keep track of our sprites. Each sprite should
         # go into a list.
-        self.coin_list = None
+        # self.coin_list = None
         self.wall_list = None
         self.player_list = None
 
@@ -58,7 +97,10 @@ class GameView(arcade.View):
         self.collect_coin_sound = arcade.load_sound(":resources:sounds/coin1.wav")
         self.jump_sound = arcade.load_sound(":resources:sounds/jump1.wav")
 
-        arcade.set_background_color(arcade.csscolor.CORNFLOWER_BLUE)
+        # arcade.set_background_color(arcade.csscolor.CORNFLOWER_BLUE)
+    def on_show(self):
+        arcade.set_background_color(arcade.color.BLACK)
+
 
     def setup(self):
         """ Set up the game here. Call this function to restart the game. """
@@ -85,11 +127,11 @@ class GameView(arcade.View):
         # --- Load in a map from the tiled editor ---
 
         # Name of map file to load
-        map_name = ":resources:tmx_maps/map.tmx"
+        map_name = "floor_is_lava.tmx"
         # Name of the layer in the file that has our platforms/walls
         platforms_layer_name = 'Platforms'
         # Name of the layer that has items for pick-up
-        coins_layer_name = 'Coins'
+        # coins_layer_name = 'Coins'
 
         # Read in the tiled map
         my_map = arcade.tilemap.read_tmx(map_name)
