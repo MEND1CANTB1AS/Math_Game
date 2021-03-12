@@ -43,7 +43,7 @@ class Factors_Problem(Problem):
 
     def __init__(self):
         super().__init__()
-        self.value = random.randint(2, 100)
+        self.value = random.randint(1, 99)
         self.problem_text = "Find the Number: {}".format(self.value) # add forumla
         self.points_right = 5
         self.points_wrong = -1
@@ -56,14 +56,17 @@ class Factors_Problem(Problem):
 
 class Number(arcade.Sprite):
 
-    def __init__(self):
+    def __init__(self, value=-1):
         super().__init__()
-        self.value = random.randint(1,99)
+        if value == -1:
+            self.value = random.randint(1, 99)
+        else:
+            self.value = value
         self.texture = Number.convert_text_to_texture(str(self.value))
         self.center_x = random.randint(10, WIN_WIDTH-10)
         self.center_y = WIN_HEIGHT - 10
-        self.change_x = random.uniform(-2, 2)
-        self.change_y = random.uniform(-0.1, -2)
+        self.change_x = random.uniform(-5, 2)
+        self.change_y = random.uniform(-0.1, -5)
 
     def update(self):
         self.center_x += self.change_x
@@ -93,7 +96,7 @@ class Game(arcade.Window):
         self.number = arcade.SpriteList()
         self.keys_pressed = set()
         self.score = 0
-        self.background = arcade.load_texture("background.png")
+        self.background = arcade.load_texture("background.jpg")
         self.problem = None
         self.problem_timer = 0
         
@@ -105,34 +108,39 @@ class Game(arcade.Window):
         self.number.draw()
 
         if self.problem is not None:
-            arcade.draw_text(self.problem.problem_text, WIN_WIDTH//3, WIN_HEIGHT - 60, arcade.color.BLACK, 50)
+            arcade.draw_text(self.problem.problem_text, WIN_WIDTH//3, WIN_HEIGHT - 60, arcade.color.BLUE_GRAY, 50)
 
         output = f"Score: {self.score}"
-        arcade.draw_text(output, 10, 20, arcade.color.BLACK, 50)
+        arcade.draw_text(output, 10, 20, arcade.color.WHITE, 50)
 
         output = f"Timer: {self.problem_timer // 100}"
-        arcade.draw_text(output, WIN_WIDTH - 300, 20, arcade.color.BLACK, 50)
+        arcade.draw_text(output, WIN_WIDTH - 300, 20, arcade.color.WHITE, 50)
     
     def create_problem(self):
         if self.problem_timer == 0:
             self.problem = Factors_Problem()
-            self.problem_timer = 2000
+            self.problem_timer = 6000
         else:
             self.problem_timer -= 1
 
+    def create_answer_number(self):
+        value = Number(self.problem.value)
+        self.number.append(value)
+        self.number.update()
+
     def on_update(self, delta_time):
         self.check_pressed_keys()
-        self.create_number()
         self.create_problem()
+        self.create_number()
         self.number.update()
         hit_list = arcade.check_for_collision_with_list(self.player, self.number)
         for number in hit_list:
             self.score += number.hit(self.problem)
     
     def create_number(self):
-        if random.randint(1,99) == 1:
-            number = Number()
-            self.number.append(number)
+        if random.randint(1, 50) == 1:
+            value = Number()
+            self.number.append(value)
 
     def on_key_press(self, key, modifiers):
         self.keys_pressed.add(key)
