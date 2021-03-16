@@ -138,9 +138,12 @@ class Game(arcade.Window):
             self.score += number.hit(self.problem)
     
     def create_number(self):
-        if random.randint(1, 50) == 1:
-            value = Number()
-            self.number.append(value)
+        if (self.problem.value not in self.number) and (random.randint(1, 50) == 1):
+            num = Number(self.problem.value)
+            self.number.append(num)
+        elif random.randint(1, 50) == 1:
+            num = Number()
+            self.number.append(num)
 
     def on_key_press(self, key, modifiers):
         self.keys_pressed.add(key)
