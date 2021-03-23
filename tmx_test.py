@@ -69,6 +69,56 @@ class Player(arcade.Sprite):
         elif self.top > SCREEN_HEIGHT - 1:
             self.top = SCREEN_HEIGHT - 1
 
+class Problem():
+    def __init__(self):
+        self.center_x = SCREEN_WIDTH / 2
+        self.center_y = SCREEN_HEIGHT / 2
+
+    def equation(self):
+        # the operator (+, -, *, /) will be randomly assigned
+        operator = random.randint(1, 4)
+
+        # addition problems
+        if operator == 1:
+            x = int(random.randint(0, 10))
+            y = int(random.randint(0, 10))
+            question = (f'{x} + {y} = ')
+            answer = x + y
+            return question
+            # if question == answer:
+            #     print("Correct!")
+
+        # subtraction problems
+        elif operator == 2:
+            x = int(random.randint(0, 10))
+            y = int(random.randint(0, x))
+            question = (f'{x} - {y} = ')
+            answer = x - y
+            return question 
+            # if question == answer:
+                # print('Correct!')
+
+        # multiplication problems
+        elif operator == 3:
+            x = int(random.randint(0, 11))
+            y = int(random.randint(0, 9))
+            question = (f'{x} x {y} = ')
+            answer = x * y
+            return question
+            # if question == answer:
+            #     print('Correct!')
+
+        # division problems
+        else:
+            x = int(random.randint(1, 10))
+            y = int(random.randint(0, 10))
+            z = x * y
+            question = (f'{z} / {x} = ')
+            answer = z / x
+            return question
+            # if question == answer:
+            #     print('Correct!')
+
 class MyGame(arcade.Window):
     """
     Main application class.
@@ -125,6 +175,7 @@ class MyGame(arcade.Window):
         self.player_sprite.center_x = 256
         self.player_sprite.center_y = 256
         self.player_list.append(self.player_sprite)
+        self.problem = Problem()
 
         # --- Load in a map from the tiled editor ---
 
@@ -167,6 +218,8 @@ class MyGame(arcade.Window):
         score_text = f"Score: {self.score}"
         arcade.draw_text(score_text, 10 + self.view_left, 10 + self.view_bottom,
                          arcade.csscolor.WHITE, 18)
+
+        arcade.draw_text(self.problem.equation(), self.problem.center_x, self.problem.center_y, arcade.color.WHITE)
 
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed. """
