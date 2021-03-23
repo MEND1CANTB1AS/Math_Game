@@ -262,14 +262,14 @@ class MyGame(arcade.Window):
                          arcade.csscolor.WHITE, 18)
 
         if self.problem is not None:
-            arcade.draw_text(self.problem.problem_text, self.problem.center_x, self.problem.center_y, arcade.color.WHITE)
+            arcade.draw_text(self.problem.problwem_text, self.problem.center_x, self.problem.center_y, arcade.color.WHITE)
 
     def create_problem(self):
-        if self.problem_timer == 0:
-            self.problem = Problem()
-            self.problem_timer = 6000
-        else:
-            self.problem_timer -= 1
+        # if self.problem_timer == 0:
+        self.problem = Problem()
+            # self.problem_timer = 6000
+        # else:
+            # self.problem_timer -= 1
     
     def create_number(self):
         if (self.problem.answer not in self.number) and (random.randint(1, 50) == 1):
