@@ -3,6 +3,9 @@ Platformer Game
 """
 import arcade
 import random
+from PIL import Image
+from PIL import ImageDraw
+from PIL import ImageFont
 
 # Constants
 SCREEN_WIDTH = 1000
@@ -73,6 +76,8 @@ class Problem():
     def __init__(self):
         self.center_x = SCREEN_WIDTH / 2
         self.center_y = SCREEN_HEIGHT / 2
+        self.problem_text, self.answer = self.equation()
+        # self.answer = self.equation()
 
     def equation(self):
         # the operator (+, -, *, /) will be randomly assigned
@@ -83,8 +88,8 @@ class Problem():
             x = int(random.randint(0, 10))
             y = int(random.randint(0, 10))
             question = (f'{x} + {y} = ')
-            answer = x + y
-            return question
+            answer = str(x + y)
+            return question, answer
             # if question == answer:
             #     print("Correct!")
 
@@ -93,8 +98,8 @@ class Problem():
             x = int(random.randint(0, 10))
             y = int(random.randint(0, x))
             question = (f'{x} - {y} = ')
-            answer = x - y
-            return question 
+            answer = str(x - y)
+            return question, answer
             # if question == answer:
                 # print('Correct!')
 
@@ -103,8 +108,8 @@ class Problem():
             x = int(random.randint(0, 11))
             y = int(random.randint(0, 9))
             question = (f'{x} x {y} = ')
-            answer = x * y
-            return question
+            answer = str(x * y)
+            return question, answer
             # if question == answer:
             #     print('Correct!')
 
@@ -114,10 +119,44 @@ class Problem():
             y = int(random.randint(0, 10))
             z = x * y
             question = (f'{z} / {x} = ')
-            answer = z / x
-            return question
+            answer = str(z / x)
+            return question, answer
             # if question == answer:
             #     print('Correct!')
+
+class Number(arcade.Sprite):
+
+    def __init__(self, value=-1):
+        super().__init__()
+        if value == -1:
+            self.value = random.randint(1, 99)
+        else:
+            self.value = value
+        self.texture = Number.convert_text_to_texture(str(self.value))
+        self.center_x = random.randint(10, SCREEN_HEIGHT-10)
+        self.center_y = SCREEN_WIDTH - 10
+        self.change_x = random.uniform(-5, 2)
+        self.change_y = random.uniform(-0.1, -5)
+
+    def update(self):
+        self.center_x += self.change_x
+        self.center_y += self.change_y
+        if self.center_x < 0 or self.center_x > SCREEN_WIDTH:
+            self.change_x *= -1
+        if self.center_y < 0:
+            self.remove_from_sprite_lists()
+
+    def convert_text_to_texture(text_value):
+        img = Image.new('RGBA', (125,125), color = (255, 255, 255, 0))
+        d = ImageDraw.Draw(img) 
+        fnt = ImageFont.truetype('times', 100)
+        d.text((15,5), text_value, font=fnt, fill = arcade.color.BURNT_ORANGE) 
+        texture = arcade.Texture(str(text_value), img) 
+        return texture
+
+    def hit(self, problem):
+        self.remove_from_sprite_lists()
+        return problem.solve(self.value)
 
 class MyGame(arcade.Window):
     """
@@ -147,6 +186,9 @@ class MyGame(arcade.Window):
         # Keep track of the score
         self.score = 0
 
+        self.problem = None
+        self.number = arcade.SpriteList()
+
         # Load sounds
         # self.collect_coin_sound = arcade.load_sound(":resources:sounds/coin1.wav")
         self.jump_sound = arcade.load_sound(":resources:sounds/jump1.wav")
@@ -175,7 +217,6 @@ class MyGame(arcade.Window):
         self.player_sprite.center_x = 256
         self.player_sprite.center_y = 256
         self.player_list.append(self.player_sprite)
-        self.problem = Problem()
 
         # --- Load in a map from the tiled editor ---
 
@@ -213,13 +254,37 @@ class MyGame(arcade.Window):
         self.wall_list.draw()
         
         self.player_list.draw()
+        self.number.draw()
 
         # Draw our score on the screen, scrolling it with the viewport
         score_text = f"Score: {self.score}"
         arcade.draw_text(score_text, 10 + self.view_left, 10 + self.view_bottom,
                          arcade.csscolor.WHITE, 18)
 
-        arcade.draw_text(self.problem.equation(), self.problem.center_x, self.problem.center_y, arcade.color.WHITE)
+        if self.problem is not None:
+            arcade.draw_text(self.problem.problem_text, self.problem.center_x, self.problem.center_y, arcade.color.WHITE)
+
+    def create_problem(self):
+        if self.problem_timer == 0:
+            self.problem = Problem()
+            self.problem_timer = 6000
+        else:
+            self.problem_timer -= 1
+    
+    def create_number(self):
+        if (self.problem.answer not in self.number) and (random.randint(1, 50) == 1):
+            num = Number(self.problem.answer)
+            self.number.append(num)
+        elif random.randint(1, 50) == 1:
+            num = Number()
+            self.number.append(num)
+
+    def create_answer_number(self):
+        value = Number(self.problem.answer)
+        self.number.append(value)
+        self.number.update()
+    
+
 
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed. """
@@ -292,6 +357,13 @@ class MyGame(arcade.Window):
                                 SCREEN_WIDTH + self.view_left,
                                 self.view_bottom,
                                 SCREEN_HEIGHT + self.view_bottom)
+        
+        self.create_problem()
+        self.create_number()
+        self.number.update()
+        hit_list = arcade.check_for_collision_with_list(self.player_sprite, self.number)
+        for number in hit_list:
+            self.score += number.hit(self.problem)
 
 
 def main():
