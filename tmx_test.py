@@ -132,21 +132,21 @@ class Number(arcade.Sprite):
             self.value = random.randint(1, 99)
         else:
             self.value = value
-        self.texture = Number.convert_text_to_texture(str(self.value))
+        self.texture = Number.convert_text_to_texture(self, str(self.value))
         self.center_x = random.randint(10, SCREEN_HEIGHT-10)
         self.center_y = SCREEN_WIDTH - 10
-        self.change_x = random.uniform(-5, 2)
-        self.change_y = random.uniform(-0.1, -5)
+        # self.change_x = random.uniform(-5, 2)
+        # self.change_y = random.uniform(-0.1, -5)
 
-    def update(self):
-        self.center_x += self.change_x
-        self.center_y += self.change_y
-        if self.center_x < 0 or self.center_x > SCREEN_WIDTH:
-            self.change_x *= -1
-        if self.center_y < 0:
-            self.remove_from_sprite_lists()
+    # def update(self):
+    #     self.center_x += self.change_x
+    #     self.center_y += self.change_y
+    #     if self.center_x < 0 or self.center_x > SCREEN_WIDTH:
+    #         self.change_x *= -1
+    #     if self.center_y < 0:
+    #         self.remove_from_sprite_lists()
 
-    def convert_text_to_texture(text_value):
+    def convert_text_to_texture(self, text_value):
         img = Image.new('RGBA', (125,125), color = (255, 255, 255, 0))
         d = ImageDraw.Draw(img) 
         fnt = ImageFont.truetype('times', 100)
@@ -262,7 +262,7 @@ class MyGame(arcade.Window):
                          arcade.csscolor.WHITE, 18)
 
         if self.problem is not None:
-            arcade.draw_text(self.problem.problwem_text, self.problem.center_x, self.problem.center_y, arcade.color.WHITE)
+            arcade.draw_text(self.problem.problem_text, self.problem.center_x, self.problem.center_y, arcade.color.WHITE)
 
     def create_problem(self):
         # if self.problem_timer == 0:
@@ -282,7 +282,7 @@ class MyGame(arcade.Window):
     def create_answer_number(self):
         value = Number(self.problem.answer)
         self.number.append(value)
-        self.number.update()
+        # self.number.update()
     
 
 
