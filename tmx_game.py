@@ -275,11 +275,14 @@ class MyGame(arcade.Window):
 
         if self.problem is not None:
             arcade.draw_text(self.problem.problem_text, self.problem.center_x - 95, self.problem.center_y + 60, arcade.color.WHITE, 24)
+        
+        if self.score >= 10:
+            arcade.draw_text("You win!", 500, 325, arcade.color.ORANGE, 100)
 
     def create_problem(self):
         if self.problem_timer == 0 or self.problem.is_solved:
             self.problem = Problem()
-            self.problem_timer = 6000
+            self.problem_timer = 3000
             self.create_answer_number()
             for num in range(4):
                 self.create_number()
@@ -405,7 +408,6 @@ class MyGame(arcade.Window):
         hit_list = arcade.check_for_collision_with_list(self.player_sprite, self.number)
         for number in hit_list:
             self.score += number.hit(self.problem)
-
 
 def main():
     """ Main method """
