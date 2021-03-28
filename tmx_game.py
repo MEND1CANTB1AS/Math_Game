@@ -38,6 +38,7 @@ class Player(arcade.Sprite):
         super().__init__()
         self.scale = SPRITE_SCALING
         self.textures = []
+        self.lives = 3
 
         # Load a left facing texture and a right facing texture.
         # flipped_horizontally=True will mirror the image we load.
@@ -266,6 +267,9 @@ class MyGame(arcade.Window):
         arcade.draw_text(timer_text, 700 + self.view_left, 35 + self.view_bottom,
                          arcade.csscolor.BLUE_VIOLET, 24)
 
+        lives_text = f"Lives: {self.player_sprite.lives}"
+        arcade.draw_text(lives_text, self.problem.center_x - 95, self.problem.center_y + 125, arcade.csscolor.ORANGE, 24)
+
         self.problem_timer -= 2
         if self.problem_timer <= 0 or self.problem.is_solved:
             for num in self.number:
@@ -276,8 +280,11 @@ class MyGame(arcade.Window):
         if self.problem is not None:
             arcade.draw_text(self.problem.problem_text, self.problem.center_x - 95, self.problem.center_y + 60, arcade.color.WHITE, 24)
         
-        if self.score >= 10:
-            arcade.draw_text("You win!", 500, 325, arcade.color.ORANGE, 100)
+        if self.score >= 50:
+            arcade.draw_text("You win!", self.player_sprite.center_x, self.player_sprite.center_y, arcade.color.ORANGE, 100)
+
+        if self.player_sprite.lives == 0:
+            arcade.draw_text("You lose!", self.player_sprite.center_x, self.player_sprite.center_y, arcade.color.RED, 100)
 
     def create_problem(self):
         if self.problem_timer == 0 or self.problem.is_solved:
@@ -359,6 +366,11 @@ class MyGame(arcade.Window):
 
     def on_update(self, delta_time):
         """ Movement and game logic """
+
+        if self.player_sprite.center_y < 100:
+            self.player_sprite.center_x = 256
+            self.player_sprite.center_y = 256
+            self.player_sprite.lives -= 1
 
         # Move the player with the physics engine
         self.physics_engine.update()
