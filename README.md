@@ -16,11 +16,11 @@ We have created an elementary level math game intended to help children to revie
 
 # Collaborators
 
-* Adam Padilla
+* Adam Palilla
 * Kate Clark
 * Timothy Stephenson
 * Abi Priebe
-* Katelyn Dabierra
+* Katelyn Dabbiero
 
 # Useful Websites
 
