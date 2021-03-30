@@ -221,7 +221,7 @@ class MyGame(arcade.Window):
         # --- Load in a map from the tiled editor ---
 
         # Name of map file to load
-        map_name = "floor_is_lava.tmx"
+        map_name = r"Math_Game\floor_is_lava.tmx"
         # Name of the layer in the file that has our platforms/walls
         platforms_layer_name = 'Platforms'
 
@@ -230,9 +230,10 @@ class MyGame(arcade.Window):
 
         # -- Platforms
         self.wall_list = arcade.tilemap.process_layer(map_object=my_map,
-                                                      layer_name=platforms_layer_name,
+                                                      layer_name='Platforms',
+                                                      base_directory=r'C:\Users\katel\Desktop\CSE310\group_project\Math_Game\platformer-art-complete-pack-0\Base pack\Tiles',
                                                       scaling=TILE_SCALING,
-                                                      use_spatial_hash=True)
+                                                      use_spatial_hash=True, hit_box_algorithm="Simple", hit_box_detail=4.5)
 
         # --- Other stuff
         # Set the background color

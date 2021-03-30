@@ -3,7 +3,7 @@
  <editorsettings>
   <export target="../../floor_is_lava.tmx" format="tmx"/>
  </editorsettings>
- <tileset firstgid="1" name="platforms" tilewidth="914" tileheight="936" tilecount="224" columns="0">
+ <tileset firstgid="1" name="platforms" tilewidth="914" tileheight="936" tilecount="225" columns="0">
   <grid orientation="orthogonal" width="1" height="1"/>
   <tile id="0">
    <image width="70" height="70" source="platformer-art-complete-pack-0/Base pack/Tiles/box.png"/>
@@ -255,7 +255,7 @@
    <image width="70" height="70" source="platformer-art-complete-pack-0/Base pack/Tiles/grassMid.png"/>
   </tile>
   <tile id="83">
-   <image width="70" height="70" source="platformer-art-complete-pack-0/Base pack/Tiles/grassRight.png"/>
+   <image width="128" height="128" source="platformer-art-complete-pack-0/Base pack/Tiles/grassRight.png"/>
   </tile>
   <tile id="84">
    <image width="48" height="146" source="platformer-art-complete-pack-0/Base pack/Tiles/hill_large.png"/>
@@ -669,13 +669,16 @@
    <image width="70" height="70" source="platformer-art-complete-pack-0/Mushroom expansion/PNG/tinyShroom_tan.png"/>
   </tile>
   <tile id="221">
-   <image width="128" height="128" source="../../../../../../Downloads/platform_tutorial/platform_tutorial/images/tiles/lavaTop_high.png"/>
+   <image source="../../../../../../Downloads/platform_tutorial/platform_tutorial/images/tiles/lavaTop_high.png"/>
   </tile>
   <tile id="222">
-   <image width="128" height="128" source="../../../../../../Downloads/platform_tutorial/platform_tutorial/images/tiles/lavaTop_low.png"/>
+   <image source="../../../../../../Downloads/platform_tutorial/platform_tutorial/images/tiles/lavaTop_low.png"/>
   </tile>
   <tile id="223">
-   <image width="128" height="128" source="../../../../../../Downloads/platform_tutorial/platform_tutorial/images/tiles/lava.png"/>
+   <image source="../../../../../../Downloads/platform_tutorial/platform_tutorial/images/tiles/lava.png"/>
+  </tile>
+  <tile id="224">
+   <image width="70" height="70" source="platformer-art-complete-pack-0/Base pack/Tiles/liquidLava.png"/>
   </tile>
  </tileset>
  <layer id="1" name="Platforms" width="25" height="20">
@@ -698,8 +701,8 @@
 0,0,0,0,0,0,0,0,0,0,217,0,151,151,151,150,0,0,0,217,220,0,0,0,0,
 160,160,160,160,160,0,0,0,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-224,224,224,224,224,224,224,224,224,224,224,224,224,224,224,224,224,224,224,224,224,224,224,224,224,
-224,224,224,224,224,224,224,224,224,224,224,224,224,224,224,224,224,224,224,224,224,224,224,224,224
+225,225,225,225,225,225,225,225,225,225,225,225,225,225,225,225,225,225,225,225,225,225,225,225,225,
+225,225,225,225,225,225,225,225,225,225,225,225,225,225,225,225,225,225,225,225,225,225,225,225,225
 </data>
  </layer>
 </map>
