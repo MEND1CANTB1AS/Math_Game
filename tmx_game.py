@@ -367,7 +367,7 @@ class MyGame(arcade.Window):
     def on_update(self, delta_time):
         """ Movement and game logic """
 
-        if self.player_sprite.center_y < 127:
+        if self.player_sprite.center_y < 100:
             self.player_sprite.center_x = 256
             self.player_sprite.center_y = 256
             self.player_sprite.lives -= 1
