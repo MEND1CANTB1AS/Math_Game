@@ -1,5 +1,12 @@
-Score: 30 - Player: KAT 
-Score: 3 - Player: TEL 
-Score: 45 - Player: DAN 
-Score: 34 - Player: SAM 
-Score: 20 - Player: PAM 
+30
+3
+45
+34
+20 
+0
+0
+0
+0
+0
+0
+0

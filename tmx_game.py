@@ -159,14 +159,14 @@ class Number(arcade.Sprite):
         self.remove_from_sprite_lists()
         return problem.solve(self.value)
 
-class MyGame(arcade.Window):
+class GameView(arcade.View):
     """
     Main application class.
     """
 
     def __init__(self):
         # Call the parent class and set up the window.
-        super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
+        super().__init__()
 
         # These are 'lists' that keep track of our sprites. Each sprite should go into a list.
         self.wall_list = None
@@ -194,7 +194,7 @@ class MyGame(arcade.Window):
         self.collect_num_sound = arcade.load_sound(":resources:sounds/num1.wav")
         self.jump_sound = arcade.load_sound(":resources:sounds/jump1.wav")
 
-    def setup(self):
+    def on_show(self):
         """Set up the game here. Call this function to restart the game."""
 
         # Used to keep track of our scrolling.
@@ -421,11 +421,66 @@ class MyGame(arcade.Window):
         hit_list = arcade.check_for_collision_with_list(self.player_sprite, self.number)
         for number in hit_list:
             self.score += number.hit(self.problem)
+            self.window.total_score += self.score
+
+        # When the player runs out of lives the GameOverView is called and displayed.
+        if self.player_sprite.lives == 0:
+            self.write_to_leaderboard()
+            arcade.set_viewport(0, SCREEN_WIDTH, 0, SCREEN_HEIGHT)
+            game_over_view = GameOverView()
+            self.window.show_view(game_over_view)
+
+    def write_to_leaderboard(self):
+        f = open('leaderboard.txt', 'a')
+        f.write('{}\n'.format(self.window.total_score))
+        f.close()
+
+# Creates the Game Over screen.
+class GameOverView(arcade.View):
+    def __init__(self):
+        super().__init__()
+        self.f = []
+
+    # Reads the top 5 scores from the leaderboard.
+    def read_from_leaderboard(self):
+        self.f = open('leaderboard.txt').readlines()
+        #self.f.reverse()
+        self.f.sort(key=int)
+        self.f.reverse()
+                
+    def on_show(self):
+        # THIS LINE IS VERY IMPORTANT! Resets the viewport of the screen at the start of the view.
+        self.window.set_viewport(0, SCREEN_WIDTH, 0, SCREEN_HEIGHT)
+        arcade.set_background_color(arcade.color.BLACK)
+
+    def on_draw(self):
+        arcade.start_render()
+
+        self.read_from_leaderboard()
+        #arcade.draw_text()
+
+        """Draw "Game Over" across the screen."""
+        arcade.draw_text("Game Over", 345, SCREEN_HEIGHT - 200, arcade.color.WHITE, 54, align="center")
+
+        arcade.draw_text("Click to restart", 400, SCREEN_HEIGHT/ 12, arcade.color.WHITE, 24, align="center")
+
+        arcade.draw_text(f"Leaderboard: \nScore: {self.f[0]}Score: {self.f[1]}Score: {self.f[2]}Score: {self.f[3]}Score: {self.f[4]}", 425, SCREEN_HEIGHT /3, arcade.color.WHITE, 20, align='center')
+
+        output_total = f"Total Score: {self.window.total_score}"
+        arcade.draw_text(output_total, 10, 10, arcade.color.WHITE, 14)
+
+    # Once the mouse is pressed it will bring the player back to the beginning of the game.
+    def on_mouse_press(self, _x, _y, _button, _modifiers):
+        game_view = GameView()
+        self.window.show_view(game_view)
 
 def main():
-    """Main method."""
-    window = MyGame()
-    window.setup()
+    """ Main method """
+    window = arcade.Window(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
+    window.total_score = 0
+    game_view = GameView()
+    window.show_view(game_view)
+    game_view.on_show()
     arcade.run()
 
 
