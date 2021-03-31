@@ -431,35 +431,35 @@ class GameView(arcade.View):
             self.window.show_view(game_over_view)
 
     def write_to_leaderboard(self):
+        """Writes the scores to the leaderboard."""
         f = open('leaderboard.txt', 'a')
         f.write('{}\n'.format(self.window.total_score))
         f.close()
 
-# Creates the Game Over screen.
 class GameOverView(arcade.View):
+    """Creates the Game Over screen."""
     def __init__(self):
         super().__init__()
         self.f = []
 
-    # Reads the top 5 scores from the leaderboard.
     def read_from_leaderboard(self):
+        """Reads the top 5 scores from the leaderboard."""
         self.f = open('leaderboard.txt').readlines()
-        #self.f.reverse()
         self.f.sort(key=int)
         self.f.reverse()
                 
     def on_show(self):
-        # THIS LINE IS VERY IMPORTANT! Resets the viewport of the screen at the start of the view.
+        """Resets the viewport of the screen at the start of the view."""
         self.window.set_viewport(0, SCREEN_WIDTH, 0, SCREEN_HEIGHT)
         arcade.set_background_color(arcade.color.BLACK)
 
     def on_draw(self):
+        """Reads scores and displays game over screen."""
         arcade.start_render()
 
         self.read_from_leaderboard()
-        #arcade.draw_text()
-
-        """Draw "Game Over" across the screen."""
+        
+        # Draw "Game Over" across the screen.
         arcade.draw_text("Game Over", 345, SCREEN_HEIGHT - 200, arcade.color.WHITE, 54, align="center")
 
         arcade.draw_text("Click to restart", 400, SCREEN_HEIGHT/ 12, arcade.color.WHITE, 24, align="center")
@@ -469,8 +469,8 @@ class GameOverView(arcade.View):
         output_total = f"Total Score: {self.window.total_score}"
         arcade.draw_text(output_total, 10, 10, arcade.color.WHITE, 14)
 
-    # Once the mouse is pressed it will bring the player back to the beginning of the game.
     def on_mouse_press(self, _x, _y, _button, _modifiers):
+        """Once mouse is pressed it will bring the player back to the beginning of the game."""
         game_view = GameView()
         self.window.show_view(game_view)
 
